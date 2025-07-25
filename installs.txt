@@ -1,0 +1,44 @@
+ npm i typescript
+
+ tsc --init
+
+ npm i express
+
+ npm i --save-dev @types/express
+
+ npm install cors helmet hpp cookie-session compression express-async-errors http-status-codes
+
+ npm i --save-dev @types/cors
+
+ npm i --save-dev @types/cookie-session
+
+ npm i --save-dev @types/hpp
+
+ npm i --save-dev @types/compression
+
+ npm i -g nodemon
+
+ npm i ts-node -D
+
+ npm i --save-dev tsconfig-paths
+
+ npm i mongoose
+
+ npm i dotenv
+
+ npm i "@socket.io/redis-adapter" redis socket.io
+
+npm i bunyan
+
+npm i --save-dev @types/bunyan
+
+npm install --save-dev cross-env
+
+npm install bunyan-prettystream
+
+npm i --save-dev @types/bunyan-prettystream
+
+npm i -D eslint eslint-config-prettier prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
+
+
+
