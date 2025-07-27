@@ -1,44 +1,47 @@
- npm i typescript
-
- tsc --init
-
- npm i express
-
- npm i --save-dev @types/express
-
- npm install cors helmet hpp cookie-session compression express-async-errors http-status-codes
-
- npm i --save-dev @types/cors
-
- npm i --save-dev @types/cookie-session
-
- npm i --save-dev @types/hpp
-
- npm i --save-dev @types/compression
-
- npm i -g nodemon
-
- npm i ts-node -D
-
- npm i --save-dev tsconfig-paths
-
- npm i mongoose
-
- npm i dotenv
-
- npm i "@socket.io/redis-adapter" redis socket.io
-
-npm i bunyan
-
-npm i --save-dev @types/bunyan
-
-npm install --save-dev cross-env
-
-npm install bunyan-prettystream
-
-npm i --save-dev @types/bunyan-prettystream
-
-npm i -D eslint eslint-config-prettier prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
-
-
-
+npm i @bull-board/express: UI for monitoring Bull queues
+npm i @faker-js/faker: Generate fake data (e.g., names, emails)
+npm i @jest/types: Jest test types for TypeScript
+npm i @sendgrid/mail: Send emails using SendGrid
+npm i @socket.io/redis-adapter: Redis adapter for socket.io clustering
+npm i axios: HTTP client for making API requests
+npm i bcryptjs: Password hashing library
+npm i bull: Job/task queue based on Redis
+npm i bullmq: More advanced job queue than bull
+npm i bunyan: Logger for Node.js applications
+npm i bunyan-prettystream: Prettify Bunyan logs for CLI
+npm i canvas: Draw graphics / manipulate images on canvas
+npm i cloudinary: Upload/manage media using Cloudinary API
+npm i compression: Middleware to gzip responses
+npm i cookie-session: Store session in cookies
+npm i cors: Cross-Origin Resource Sharing middleware
+npm i dotenv: Load environment variables from .env file
+npm i ejs: Templating engine for rendering HTML
+npm i express: Web framework for Node.js
+npm i express-async-errors: Handle async errors in Express
+npm i helmet: Secure Express apps with HTTP headers
+npm i hpp: Protect against HTTP parameter pollution
+npm i http-status-codes: Constants for HTTP status codes
+npm i ip: Get server IP address
+npm i joi: Object schema validation
+npm i jsonwebtoken: Create/verify JWTs (authentication)
+npm i lodash: Utility functions for JavaScript
+npm i moment: Date/time manipulation
+npm i mongoose: MongoDB ODM (Object Document Mapper)
+npm i nodemailer: Send emails from Node.js
+npm i redis: Redis client for Node.js
+npm i socket.io: Real-time communication with WebSockets
+npm i swagger-stats: API monitoring/stats middleware
+npm i typescript: TypeScript language support
+npm i typescript-transform-paths: Path alias transformer for TypeScript
+npm i @types/*: TypeScript type definitions for respective packages
+npm i @typescript-eslint/*: ESLint plugins for TypeScript linting
+npm i cross-env: Set environment variables across OSes
+npm i eslint: Linting tool for code style and issues
+npm i eslint-config-prettier: Disable ESLint rules that conflict with Prettier
+npm i jest: JavaScript testing framework
+npm i prettier: Code formatter
+npm i ts-jest: Use Jest with TypeScript
+npm i ts-node: Run TypeScript files directly
+npm i ts-patch: Patch TypeScript to use custom transformers
+npm i tsc-alias: Replace TypeScript path aliases in output
+npm i tsconfig-paths: Resolve TS config paths at runtime
