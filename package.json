@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
+    "start": "nodemon ./build/app.js",
     "dev": "cross-env NODE_ENV=development nodemon -r tsconfig-paths/register src/app.ts",
     "build": "tsc -p .",
     "lint:check": "eslint \"src/**/*.ts\"",
@@ -16,6 +17,7 @@
   "description": "",
   "dependencies": {
     "@bull-board/express": "^6.12.0",
+    "@bull-board/ui": "^6.12.0",
     "@faker-js/faker": "^9.9.0",
     "@jest/types": "^30.0.5",
     "@sendgrid/mail": "^8.1.5",

@@ -1,3 +1,7 @@
+https://github.com/uzochukwueddie/chatty-backend
+
+to start redis=> run this in cmd => redis-commander
+
 npm i @bull-board/express: UI for monitoring Bull queues
 npm i @faker-js/faker: Generate fake data (e.g., names, emails)
 npm i @jest/types: Jest test types for TypeScript

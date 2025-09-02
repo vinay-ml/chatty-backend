@@ -7,11 +7,11 @@ import hpp from 'hpp';
 import cookieSession from 'cookie-session';
 import HTTP_STATUS from 'http-status-codes';
 import compression from 'compression';
-import { config } from './config';
+import { config } from '@root/config';
 import { Server } from 'socket.io';
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
-// import applicationRoutes from './routes';
+import applicationRoutes from './routes';
 import { CustomError, IErrorResponse } from './shared/globals/helpers/error-handler';
 import Logger from 'bunyan';
 
@@ -63,7 +63,7 @@ export class ChattyServer {
   }
 
   private routesMiddleware(app: Application): void {
-    // applicationRoutes(app);
+    applicationRoutes(app);
   }
 
   private globalErrorHandler(app: Application): void {
@@ -84,7 +84,7 @@ export class ChattyServer {
       const httpServer: http.Server = new http.Server(app);
       const socketIO: Server = await this.createSocketIO(httpServer);
       this.startHttpServer(httpServer);
-      // this.socketIOConnections(socketIO);
+      this.socketIOConnections(socketIO);
     } catch (error) {
       log.error(error);
     }
@@ -111,5 +111,5 @@ export class ChattyServer {
     });
   }
 
-  // private socketIOConnections(io: Server): void {}
+  private socketIOConnections(io: Server): void {}
 }
