@@ -4,17 +4,21 @@ import { serverAdapter } from '@service/queues/base.queue';
 import { currentUserRoutes } from '@auth/routes/currentRoutes';
 import { authMiddleware } from '@global/helpers/auth-middleware';
 import { postRoutes } from '@post/routes/postRoutes';
+import { reactionRoutes } from '@reaction/routes/reactionRoutes';
 
 const BASE_PATH = '/api/v1';
 
 export default (app: Application) => {
   const routes = () => {
+    ////////Auth////////
     app.use('/queues', serverAdapter.getRouter());
     app.use(BASE_PATH, authRoutes.routes());
     app.use(BASE_PATH, authRoutes.signoutRoutes());
-
+    ///////USER/////////
     app.use(BASE_PATH, authMiddleware.verifyUser, currentUserRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, postRoutes.routes());
+    ///////Reactions////
+    app.use(BASE_PATH, authMiddleware.verifyUser, reactionRoutes.routes());
   };
   routes();
 };
