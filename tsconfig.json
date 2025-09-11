@@ -36,6 +36,5 @@
       "@worker/*": ["src/shared/workers/*"],
       "@root/*": ["src/*"]
     }
-  },
-  "exclude": ["node_modules", "jest.config.ts", "build"]
+  }
 }
