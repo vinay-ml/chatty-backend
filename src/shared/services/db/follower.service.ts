@@ -1,14 +1,18 @@
 import { UserModel } from '@user/models/user.schema';
 import { ObjectId, BulkWriteResult } from 'mongodb';
 import mongoose, { Query } from 'mongoose';
+
 import { IQueryDeleted, IQueryComplete } from '@post/interfaces/post.interface';
 import { IUserDocument } from '@user/interfaces/user.interface';
-// import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
-// import { emailQueue } from '@service/queues/email.queue';
+import { INotificationDocument, INotificationTemplate } from '@notification/interfaces/notification.interface';
+import { NotificationModel } from '@notification/models/notification.schema';
+import { socketIONotificationObject } from '@socket/notification';
+import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
+import { emailQueue } from '@service/queues/email.queue';
 import { UserCache } from '@service/redis/user.cache';
-import { IFollowerData, IFollowerDocument } from '@root/features/follower/interfaces/follower.interface';
-import { FollowerModel } from '@root/features/follower/models/follower.schema';
 import { map } from 'lodash';
+import { FollowerModel } from '@root/features/follower/models/follower.schema';
+import { IFollowerData, IFollowerDocument } from '@root/features/follower/interfaces/follower.interface';
 
 const userCache: UserCache = new UserCache();
 
@@ -40,38 +44,36 @@ class FollowerService {
 
     const response: [BulkWriteResult, IUserDocument | null] = await Promise.all([users, userCache.getUserFromCache(followeeId)]);
 
-    console.log(response, following);
-
-    // if (response[1]?.notifications.follows && userId !== followeeId) {
-    //   const notificationModel: INotificationDocument = new NotificationModel();
-    //   const notifications = await notificationModel.insertNotification({
-    //     userFrom: userId,
-    //     userTo: followeeId,
-    //     message: `${username} is now following you.`,
-    //     notificationType: 'follows',
-    //     entityId: new mongoose.Types.ObjectId(userId),
-    //     createdItemId: new mongoose.Types.ObjectId(following._id),
-    //     createdAt: new Date(),
-    //     comment: '',
-    //     post: '',
-    //     imgId: '',
-    //     imgVersion: '',
-    //     gifUrl: '',
-    //     reaction: ''
-    //   });
-    //   socketIONotificationObject.emit('insert notification', notifications, { userTo: followeeId });
-    //   const templateParams: INotificationTemplate = {
-    //     username: response[1].username!,
-    //     message: `${username} is now following you.`,
-    //     header: 'Follower Notification'
-    //   };
-    //   const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
-    //   emailQueue.addEmailJob('followersEmail', {
-    //     receiverEmail: response[1].email!,
-    //     template,
-    //     subject: `${username} is now following you.`
-    //   });
-    // }
+    if (response[1]?.notifications.follows && userId !== followeeId) {
+      const notificationModel: INotificationDocument = new NotificationModel();
+      const notifications = await notificationModel.insertNotification({
+        userFrom: userId,
+        userTo: followeeId,
+        message: `${username} is now following you.`,
+        notificationType: 'follows',
+        entityId: new mongoose.Types.ObjectId(userId),
+        createdItemId: new mongoose.Types.ObjectId(following._id),
+        createdAt: new Date(),
+        comment: '',
+        post: '',
+        imgId: '',
+        imgVersion: '',
+        gifUrl: '',
+        reaction: ''
+      });
+      socketIONotificationObject.emit('insert notification', notifications, { userTo: followeeId });
+      const templateParams: INotificationTemplate = {
+        username: response[1].username!,
+        message: `${username} is now following you.`,
+        header: 'Follower Notification'
+      };
+      const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
+      emailQueue.addEmailJob('followersEmail', {
+        receiverEmail: response[1].email!,
+        template,
+        subject: `${username} is now following you.`
+      });
+    }
   }
 
   public async removeFollowerFromDB(followeeId: string, followerId: string): Promise<void> {
@@ -99,39 +101,6 @@ class FollowerService {
     ]);
 
     await Promise.all([unfollow, users]);
-  }
-
-  public async getFollowerData(userObjectId: ObjectId): Promise<IFollowerData[]> {
-    const follower: IFollowerData[] = await FollowerModel.aggregate([
-      { $match: { followeeId: userObjectId } },
-      { $lookup: { from: 'User', localField: 'followerId', foreignField: '_id', as: 'followerId' } },
-      { $unwind: '$followerId' },
-      { $lookup: { from: 'Auth', localField: 'followerId.authId', foreignField: '_id', as: 'authId' } },
-      { $unwind: '$authId' },
-      {
-        $addFields: {
-          _id: '$followerId._id',
-          username: '$authId.username',
-          avatarColor: '$authId.avatarColor',
-          uId: '$authId.uId',
-          postCount: '$followerId.postsCount',
-          followersCount: '$followerId.followersCount',
-          followingCount: '$followerId.followingCount',
-          profilePicture: '$followerId.profilePicture',
-          userProfile: '$followerId'
-        }
-      },
-      {
-        $project: {
-          authId: 0,
-          followerId: 0,
-          followeeId: 0,
-          createdAt: 0,
-          __v: 0
-        }
-      }
-    ]);
-    return follower;
   }
 
   public async getFolloweeData(userObjectId: ObjectId): Promise<IFollowerData[]> {
@@ -165,6 +134,39 @@ class FollowerService {
       }
     ]);
     return followee;
+  }
+
+  public async getFollowerData(userObjectId: ObjectId): Promise<IFollowerData[]> {
+    const follower: IFollowerData[] = await FollowerModel.aggregate([
+      { $match: { followeeId: userObjectId } },
+      { $lookup: { from: 'User', localField: 'followerId', foreignField: '_id', as: 'followerId' } },
+      { $unwind: '$followerId' },
+      { $lookup: { from: 'Auth', localField: 'followerId.authId', foreignField: '_id', as: 'authId' } },
+      { $unwind: '$authId' },
+      {
+        $addFields: {
+          _id: '$followerId._id',
+          username: '$authId.username',
+          avatarColor: '$authId.avatarColor',
+          uId: '$authId.uId',
+          postCount: '$followerId.postsCount',
+          followersCount: '$followerId.followersCount',
+          followingCount: '$followerId.followingCount',
+          profilePicture: '$followerId.profilePicture',
+          userProfile: '$followerId'
+        }
+      },
+      {
+        $project: {
+          authId: 0,
+          followerId: 0,
+          followeeId: 0,
+          createdAt: 0,
+          __v: 0
+        }
+      }
+    ]);
+    return follower;
   }
 
   public async getFolloweesIds(userId: string): Promise<string[]> {
